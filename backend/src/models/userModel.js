@@ -32,6 +32,13 @@ const userSchema = new mongoose.Schema({
             message: 'password and confirm password not match!'
         }
     },
+    role:
+    {
+        type: String,
+        default: 'user',
+        enum: ['user', 'admin'],
+
+    },
     profileAvatar: {
         public_id: {
             type: String,
