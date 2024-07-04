@@ -22,19 +22,19 @@ export const userLogIn = asyncErrorHandle(async (req, res, next) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-        next(new customError("All fileds are required", 400));
+        return next(new customError("All fileds are required", 400));
     }
 
     const currentUser = await User.findOne({ email });
 
     if (!currentUser) {
-        next(new customError("credentials are not match", 400));
+        return next(new customError("credentials are not match", 400));
     }
 
     const isPasswordValid = await currentUser.isPasswordCorrect(password);
 
     if (!isPasswordValid) {
-        next(new customError("credentials are not match", 400));
+        return next(new customError("credentials are not match", 400));
     }
 
     const accessToken = await currentUser.generateAccessToken();
