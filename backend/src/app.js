@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/userRouters.js";
+import globleErrorController from "./controllers/globleErrorController.js";
+import customError from "./utils/customError.js";
 
 const app = express();
 
@@ -24,6 +26,19 @@ app.use(cookieParser())
 
 app.use("/api/v1/user", userRouter);
 
+
+
+
+//catch undefin routers
+
+app.use("*", (req, res, next) => {
+
+    next(new customError(`can't find ${req.originalUrl} on the Server`, 404));
+})
+
+
+//active globle error handler
+app.use(globleErrorController);
 
 export default app;
 
