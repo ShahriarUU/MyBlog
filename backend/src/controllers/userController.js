@@ -92,7 +92,7 @@ export const userPasswordUpdate = asyncErrorHandle(async (req, res, next) => {
     const isPasswordCorrect = await currentUser.isPasswordCorrect(currentPassword);
 
     if (!isPasswordCorrect) {
-        next(new customError("your Current Password incorrect"));
+        next(new customError("your Current Password incorrect", 401));
     }
 
     currentUser.password = newPassword;

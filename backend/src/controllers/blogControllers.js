@@ -27,7 +27,7 @@ export const getBlog = asyncErrorHandle(async (req, res, next) => {
     });
 
     if (!currentBlog) {
-        next(new customError("Blog are not exist", 400));
+        return next(new customError("Blog are not exist", 400));
     }
 
     res.status(200).json(
