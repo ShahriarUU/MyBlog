@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/userRouters.js";
+import commentRouter from "./routes/commentRouter.js";
+import blogRouter from "./routes/blogRouter.js";
 import globleErrorController from "./controllers/globleErrorController.js";
 import customError from "./utils/customError.js";
 
@@ -26,7 +28,8 @@ app.use(cookieParser())
 
 app.use("/api/v1/user", userRouter);
 
-
+app.use("/api/v1/blog", blogRouter);
+app.use("/api/v1/comment", commentRouter);
 
 
 //catch undefin routers

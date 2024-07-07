@@ -47,15 +47,6 @@ const userSchema = new mongoose.Schema({
             type: String,
         },
     },
-    coverAvatar: {
-        public_id: {
-            type: String,
-        },
-        url: {
-            type: String,
-        },
-    },
-
 
 
 }, { timestamps: true });

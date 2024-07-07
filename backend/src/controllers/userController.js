@@ -9,6 +9,8 @@ export const userSignUp = asyncErrorHandle(async (req, res, next) => {
 
     const newUser = await User.create(req.body);
 
+    newUser.password = undefined;
+
     res.status(201).json({
         status: 'success',
         data: {
@@ -45,6 +47,7 @@ export const userLogIn = asyncErrorHandle(async (req, res, next) => {
         secure: true,
     };
 
+    currentUser.password = undefined;
     res.status(201)
         .cookie("accessToken", accessToken, options)
         .json({
@@ -57,3 +60,52 @@ export const userLogIn = asyncErrorHandle(async (req, res, next) => {
 
 })
 
+export const userLogout = asyncErrorHandle(async (req, res, next) => {
+
+    const options = {
+        httpOnly: true,
+        secure: true,
+    }
+
+    res.status(200).clearCookie('accessToken', options).json({
+        status: "success",
+        message: "Logout successfully",
+    });
+
+})
+
+export const userProfile = asyncErrorHandle(async (req, res, next) => {
+
+    const currentUser = req.user;
+    res.status(200).json({
+        status: 'sucess',
+        data: {
+            user: currentUser
+        }
+    })
+})
+
+export const userPasswordUpdate = asyncErrorHandle(async (req, res, next) => {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    const currentUser = await User.findById(req.user?._id);
+    const isPasswordCorrect = await currentUser.isPasswordCorrect(currentPassword);
+
+    if (!isPasswordCorrect) {
+        next(new customError("your Current Password incorrect"));
+    }
+
+    currentUser.password = newPassword;
+
+    const updateUser = await currentUser.save();
+    updateUser.password = undefined;
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            user: updateUser
+        }
+    })
+
+
+})

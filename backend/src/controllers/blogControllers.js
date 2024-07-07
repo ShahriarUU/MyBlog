@@ -1,5 +1,6 @@
 import Blog from "../models/blogModel.js";
 import asyncErrorHandle from "../utils/asyncErrorHandle.js";
+import customError from "../utils/customError.js";
 
 
 export const createBlog = asyncErrorHandle(async (req, res, next) => {
@@ -25,6 +26,10 @@ export const getBlog = asyncErrorHandle(async (req, res, next) => {
         select: ["-password"]
     });
 
+    if (!currentBlog) {
+        next(new customError("Blog are not exist", 400));
+    }
+
     res.status(200).json(
         {
             status: 'success',
@@ -35,6 +40,40 @@ export const getBlog = asyncErrorHandle(async (req, res, next) => {
         }
     )
 })
+
+export const updateBlog = asyncErrorHandle(async (req, res, next) => {
+
+    const { title, description, category } = req.body
+
+    const currentBlog = await Blog.findById(req.params.id);
+
+    if (currentBlog) {
+        currentBlog.title = title || currentBlog.title;
+        currentBlog.description = description || currentBlog.description;
+        currentBlog.category = category || currentBlog.category;
+    }
+    const updateBlog = await currentBlog.save();
+    res.status(200).json({
+        status: 'sucess',
+        data: {
+            Blog: updateBlog
+        }
+    })
+
+});
+
+export const deleteBlog = asyncErrorHandle(async (req, res, next) => {
+
+    const currentBlog = await Blog.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({
+        status: "sucess",
+        message: "delete successfully",
+        data: {
+            blog: currentBlog
+        }
+    })
+});
 
 export const getAllBlogs = asyncErrorHandle(async (req, res, next) => {
 
@@ -50,6 +89,5 @@ export const getAllBlogs = asyncErrorHandle(async (req, res, next) => {
     })
 
 });
-
 
 
