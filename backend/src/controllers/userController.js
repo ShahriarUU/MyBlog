@@ -1,7 +1,7 @@
 import User from "../models/userModel.js";
 import customError from "../utils/customError.js";
 import asyncErrorHandle from "../utils/asyncErrorHandle.js";
-
+import Blog from "../models/blogModel.js";
 
 
 
@@ -109,3 +109,53 @@ export const userPasswordUpdate = asyncErrorHandle(async (req, res, next) => {
 
 
 })
+
+export const userProfileUpdate = asyncErrorHandle(async (req, res, next) => {
+    const { name, email, profileAvatar } = req.body
+
+    const currentUser = await User.findById(req.user.id);
+
+    if (currentUser) {
+        currentUser.name = name || currentUser.name;
+        currentUser.email = email || currentUser.email;
+    }
+    const updatedUser = await currentUser.save();
+
+    updatedUser.password = undefined;
+    res.status(200).json({
+        status: 'sucess',
+        data: {
+            User: updatedUser
+        }
+    })
+
+})
+
+export const deleteUser = asyncErrorHandle(async (req, res, next) => {
+
+    const user = await User.findByIdAndDelete(req.params.id)
+
+    res.status(200).json(
+        {
+            status: "success",
+            data: {
+                User: user
+            }
+        }
+    )
+
+})
+export const getAllBlogs = asyncErrorHandle(async (req, res, next) => {
+
+    const Blogs = await Blog.find({ user: req.user?.id })
+
+    res.status(200).json({
+        status: 'sucess',
+        data: {
+            Blogs: Blogs
+        }
+
+    })
+
+});
+
