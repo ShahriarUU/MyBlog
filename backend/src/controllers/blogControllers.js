@@ -1,7 +1,7 @@
 import Blog from "../models/blogModel.js";
 import asyncErrorHandle from "../utils/asyncErrorHandle.js";
 import customError from "../utils/customError.js";
-
+import Comment from "../models/commentModel.js"
 
 export const createBlog = asyncErrorHandle(async (req, res, next) => {
 
@@ -90,4 +90,16 @@ export const getAllBlogs = asyncErrorHandle(async (req, res, next) => {
 
 });
 
+export const getAllComment = asyncErrorHandle(async (req, res, next) => {
 
+    const Comments = await Comment.find({ blog: req.params.id })
+
+    res.status(200).json({
+        status: 'sucess',
+        data: {
+            Comments: Comments
+        }
+
+    })
+
+})
