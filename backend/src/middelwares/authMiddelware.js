@@ -3,6 +3,8 @@ import asyncErrorHandle from "../utils/asyncErrorHandle.js";
 import customError from "../utils/customError.js";
 import User from "../models/userModel.js";
 
+
+//Authentication middelwares
 export const verifyToken = asyncErrorHandle(async (req, res, next) => {
 
     try {
@@ -29,3 +31,16 @@ export const verifyToken = asyncErrorHandle(async (req, res, next) => {
     }
 
 })
+
+
+//Authorization middleware
+
+export const restrict = (role) => {
+
+    return (req, res, next) => {
+        if (req.user.role !== "role") {
+            next(new customError("You do not have permission to perform this feature", 403));
+        }
+        next();
+    }
+}
