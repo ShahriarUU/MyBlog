@@ -1,6 +1,6 @@
 import express from "express";
 import { verifyToken } from "../middelwares/authMiddelware.js";
-import { createBlog, getAllBlogs, getBlog, updateBlog, deleteBlog } from "../controllers/blogControllers.js";
+import { createBlog, getBlog, updateBlog, deleteBlog, getAllComment, getAllBlogs } from "../controllers/blogControllers.js";
 
 const router = express.Router();
 
@@ -11,5 +11,5 @@ router.route("/:id").get(verifyToken, getBlog)
     .patch(verifyToken, updateBlog)
     .delete(verifyToken, deleteBlog);
 
-
+router.route("/getAllComments/:id").get(verifyToken, getAllComment);
 export default router;
