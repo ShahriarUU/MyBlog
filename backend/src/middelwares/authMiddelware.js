@@ -44,3 +44,4 @@ export const restrict = (role) => {
         next();
     }
 }
+
